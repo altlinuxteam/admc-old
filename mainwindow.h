@@ -22,7 +22,6 @@ private:
 
     QAction *newAct;
     QAction *openAct;
-    QMenu *fileMenu;
 };
 
 #endif // MAINWINDOW_H
