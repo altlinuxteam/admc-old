@@ -35,63 +35,10 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTreeWidget" name="hierarchy">
-       <attribute name="headerVisible">
-        <bool>false</bool>
+      <widget class="QTreeView" name="hierarchy">
+       <attribute name="headerDefaultSectionSize">
+        <number>0</number>
        </attribute>
-       <column>
-        <property name="text">
-         <string>Object</string>
-        </property>
-       </column>
-       <item>
-        <property name="text">
-         <string>Центральный аппарат</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Бухгалтерия</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>Вятская область</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Отдел продаж</string>
-         </property>
-        </item>
-       </item>
-       <item>
-        <property name="text">
-         <string>Users</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/icons/group.png</normaloff>:/icons/group.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Groups</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/icons/group.png</normaloff>:/icons/group.png</iconset>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Computers</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Domain Controllers</string>
-        </property>
-       </item>
       </widget>
       <widget class="QTreeWidget" name="objects">
        <property name="rootIsDecorated">
@@ -115,42 +62,6 @@
          <string>Description</string>
         </property>
        </column>
-       <item>
-        <property name="text">
-         <string>Смирнова Елена Васильевна</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/icons/user.png</normaloff>:/icons/user.png</iconset>
-        </property>
-        <property name="text">
-         <string>User</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Петров Пётр Петрович</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/icons/user.png</normaloff>:/icons/user.png</iconset>
-        </property>
-        <property name="text">
-         <string>User</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Иванов Иван Иванович</string>
-        </property>
-        <property name="icon">
-         <iconset resource="resources.qrc">
-          <normaloff>:/icons/user.png</normaloff>:/icons/user.png</iconset>
-        </property>
-        <property name="text">
-         <string>User</string>
-        </property>
-       </item>
       </widget>
       <widget class="QTabWidget" name="properties">
        <property name="currentIndex">

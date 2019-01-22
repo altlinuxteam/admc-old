@@ -1,11 +1,15 @@
 #include "common.h"
 #include "mainwindow.h"
+#include "ldapobjectmodel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     setupUi(this);
     createMenu();
+
+    LdapObjectModel *model = new LdapObjectModel;
+    hierarchy->setModel(model);
 }
 
 void MainWindow::createMenu()
