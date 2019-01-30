@@ -1,9 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-
 #include "ui_mainwindow.h"
 #include <QMainWindow>
+#include <QSettings>
+
+#include "connector.h"
 
 class MainWindow : public QMainWindow, public Ui_MainWindow
 {
@@ -22,6 +24,10 @@ private:
 
     QAction *newAct;
     QAction *openAct;
+
+    QSettings settings;
+
+    QList<Connector*> connectors;
 };
 
 #endif // MAINWINDOW_H

@@ -2,6 +2,7 @@
 #define LDAPITEMMODEL_H
 
 #include <QAbstractItemModel>
+#include "ldapconnection.h"
 
 class LdapObjectModel : public QAbstractItemModel
 {
@@ -20,14 +21,14 @@ public:
     enum Roles {
         ObjectIconRole = Qt::DecorationRole,
         ObjectDNRole = Qt::UserRole + 1,
-        ObjectNameRole = Qt::UserRole + 2
+        ObjectNameRole = Qt::DisplayRole
     };
 
 public:
     explicit LdapObjectModel(QObject *parent = nullptr);
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = ObjectNameRole) const override;
 
     // Basic functionality:
     QModelIndex index(int row, int column,
@@ -45,7 +46,9 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    void addConnector(Connector &c);
 private:
+    QList<LdapConnection*> connections;
 };
 
 #endif // LDAPITEMMODEL_H

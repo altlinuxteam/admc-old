@@ -6,12 +6,11 @@
 #include <QVariant>
 #include <QStringList>
 
-class ObjectData: QMap<QString, QStringList>
+class ObjectData: public QMap<QString, QStringList>
 {
 public:
     ObjectData();
 
-    int count() const { return 0; }
     QVariant value(int column) const { return column; }
 };
 

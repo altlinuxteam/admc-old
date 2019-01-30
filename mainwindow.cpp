@@ -3,13 +3,18 @@
 #include "ldapobjectmodel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent), settings("BaseALT", "admc")
 {
     setupUi(this);
     createMenu();
 
-    LdapObjectModel *model = new LdapObjectModel;
+    LdapObjectModel *model = new LdapObjectModel(this);
     hierarchy->setModel(model);
+
+    connectors.append(new Connector(this));
+    Connector *c = connectors.back();
+    c->connect("dc0.domain.alt");
+    model->addConnector(*c);
 }
 
 void MainWindow::createMenu()

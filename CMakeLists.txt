@@ -10,8 +10,12 @@ set (SOURCES
         common.h
         mainwindow.h
         mainwindow.cpp
+        connector.h
+        connector.cpp
         objectdata.h
         objectdata.cpp
+        ldapconnection.h
+        ldapconnection.cpp
         ldapobject.h
         ldapobject.cpp
         ldapobjectmodel.h

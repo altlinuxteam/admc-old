@@ -6,7 +6,7 @@
 class LdapObject
 {
 public:
-    LdapObject(const QList<QVariant> &data, LdapObject *parent = 0);
+    LdapObject(const ObjectData &data, LdapObject *parent = 0);
     ~LdapObject();
 
     void appendChild(LdapObject *child);

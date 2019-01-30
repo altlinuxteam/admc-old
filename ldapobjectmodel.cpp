@@ -3,6 +3,7 @@
 LdapObjectModel::LdapObjectModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
+
 }
 
 QVariant LdapObjectModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -59,4 +60,9 @@ QVariant LdapObjectModel::data(const QModelIndex &index, int role) const
 
     // FIXME: Implement me!
     return QVariant();
+}
+
+void LdapObjectModel::addConnector(Connector &connector)
+{
+    connections.append(new LdapConnection(connector));
 }

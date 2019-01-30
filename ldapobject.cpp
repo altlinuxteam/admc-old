@@ -4,10 +4,10 @@
 
 #include <QStringList>
 
-LdapObject::LdapObject(const QList<QVariant> &data, LdapObject *parent)
+LdapObject::LdapObject(const ObjectData &data, LdapObject *parent)
 {
     parentObject = parent;
-    //objectData = data;
+    objectData = data;
 }
 
 LdapObject::~LdapObject()
