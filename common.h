@@ -9,4 +9,6 @@
 #include <QtWidgets>
 #endif
 
+#include <QDebug>
+
 #endif // COMMON_H

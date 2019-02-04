@@ -2,16 +2,57 @@
 #define OBJECTDATA_H
 
 #include <QMap>
-#include <QList>
+#include <QString>
 #include <QVariant>
-#include <QStringList>
 
-class ObjectData: public QMap<QString, QStringList>
+enum AttributeType
+{
+    NameAttr,
+    DNAttr,
+    CNAttr,
+    DistinguishedNameAttr,
+    ShowInAdvancedViewOnlyAttr,
+    ObjectCategoryAttr,
+    ObjectClassAttr,
+    ObjectGUIDAttr,
+    ObjectSidAttr,
+    uSNChangedAttr,
+    uSNCreatedAttr,
+    WhenChangedAttr,
+    WhenCreatedAttr,
+    InstanceTypeAttr,
+    AdminCountAttr,
+    sAMAccountNameAttr,
+    sAMAccountTypeAttr,
+    DescriptionAttr,
+    UserAccountControlAttr,
+    CodePageAttr,
+    CountryCodeAttr,
+    AccountExpiresAttr,
+    LastLogoffAttr,
+    LastLogonAttr,
+    LogonCountAttr,
+    PrimaryGroupIDAttr,
+    BadPwdCountAttr,
+    BadPasswordTimeAttr,
+    PwdLastSetAttr,
+    MemberAttr,
+    MemberOfAttr,
+    SystemFlagsAttr,
+    isCriticalSystemObjectAttr,
+    UnknownAttr
+};
+
+QString attributeName(AttributeType attr);
+
+typedef QMap<QString, QString> ObjectMap;
+class ObjectData: public ObjectMap
 {
 public:
     ObjectData();
 
-    QVariant value(int column) const { return column; }
+    QVariant insert(AttributeType attr, QString val);
+    QVariant value(AttributeType attr) const;
 };
 
 #endif // OBJECTDATA_H

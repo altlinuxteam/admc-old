@@ -7,7 +7,8 @@ Connector::Connector(QObject *parent) : QObject(parent), isMounted(false)
 
 bool Connector::connect(QString server)
 {
-    return false;
+    dc = server;
+    return connect(QDir("mnt"));
 }
 
 bool Connector::connect(QDir mountpoint)

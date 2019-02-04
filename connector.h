@@ -14,14 +14,18 @@ public:
     bool connect(QString server);
     bool connect(QDir mountpoint);
 
+    QString server() const {
+        return dc;
+    }
 signals:
 
 public slots:
 
 private:
-    bool isMounted;
+    QString dc;
     QDir root;
     QProcess adfs;
+    bool isMounted;
 };
 
 #endif // CONNECTOR_H

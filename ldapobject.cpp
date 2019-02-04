@@ -1,10 +1,9 @@
-
-
 #include "ldapobject.h"
 
 #include <QStringList>
 
-LdapObject::LdapObject(const ObjectData &data, LdapObject *parent)
+LdapObject::LdapObject(const ObjectData &data, LdapObject *parent, ObjectType objectType):
+    objectType(objectType)
 {
     parentObject = parent;
     objectData = data;
@@ -15,9 +14,9 @@ LdapObject::~LdapObject()
     qDeleteAll(childObjects);
 }
 
-void LdapObject::appendChild(LdapObject *item)
+void LdapObject::appendChild(LdapObject *object)
 {
-    childObjects.append(item);
+    childObjects.append(object);
 }
 
 LdapObject *LdapObject::child(int row)
@@ -35,9 +34,9 @@ int LdapObject::columnCount() const
     return objectData.count();
 }
 
-QVariant LdapObject::data(int column) const
+QVariant LdapObject::data(AttributeType attr) const
 {
-    return objectData.value(column);
+    return objectData.value(attr);
 }
 
 LdapObject *LdapObject::parent()
@@ -51,4 +50,9 @@ int LdapObject::row() const
         return parentObject->childObjects.indexOf(const_cast<LdapObject*>(this));
 
     return 0;
+}
+
+ObjectType LdapObject::type()
+{
+    return objectType;
 }

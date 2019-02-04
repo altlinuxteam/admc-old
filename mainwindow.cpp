@@ -5,11 +5,13 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), settings("BaseALT", "admc")
 {
+    qDebug() << "Start MainWindow";
     setupUi(this);
     createMenu();
 
     LdapObjectModel *model = new LdapObjectModel(this);
     hierarchy->setModel(model);
+    hierarchy->setHeaderHidden(true);
 
     connectors.append(new Connector(this));
     Connector *c = connectors.back();
