@@ -99,13 +99,26 @@ bool LdapObjectModel::hasChildren(const QModelIndex &parent) const
 
 bool LdapObjectModel::canFetchMore(const QModelIndex &parent) const
 {
-    // FIXME: Implement me!
+    if (!parent.isValid()) {
+        qDebug() << "LdapObjectModel::canFetchMore: for not valid";
+    } else {
+        LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
+        qDebug() << "LdapObjectModel::canFetchMore: for object " << parentObject->name();
+        return parentObject->canFetch();
+    }
+
     return false;
 }
 
 void LdapObjectModel::fetchMore(const QModelIndex &parent)
 {
-    // FIXME: Implement me!
+    if (!parent.isValid()) {
+        qDebug() << "LdapObjectModel::fetchMore: for not valid";
+    } else {
+        LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
+        qDebug() << "LdapObjectModel::fetchMore: for object " << parentObject->name();
+        parentObject->fetch();
+    }
 }
 
 QVariant LdapObjectModel::data(const QModelIndex &index, int role) const
@@ -122,7 +135,7 @@ QVariant LdapObjectModel::data(const QModelIndex &index, int role) const
 
     LdapObject *object = static_cast<LdapObject*>(index.internalPointer());
 
-    qDebug() << "LdapObjectModel::data return NameAttr";
+    qDebug() << "LdapObjectModel::data return NameAttr for ObjectType" << object->type();
     return object->data(NameAttr);
 }
 

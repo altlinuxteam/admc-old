@@ -1,7 +1,7 @@
 #include "ldapconnection.h"
 
-LdapConnection::LdapConnection(Connector &c):
-    LdapObject(ObjectData()), connector(c)
+LdapConnection::LdapConnection(Connector &connector):
+    LdapObject(connector.server(), connector, nullptr, ConnectionType)
 {
-    objectData.insert(NameAttr, c.server());
 }
+

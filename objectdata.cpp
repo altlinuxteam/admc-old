@@ -66,5 +66,7 @@ QVariant ObjectData::value(AttributeType attr) const
 QVariant ObjectData::insert(AttributeType attr, QString val)
 {
     QString key = attributeName(attr);
+    qDebug() << "ObjectData::insert for attr: " << attr << val;
     ObjectMap::insert(key, val);
+    qDebug() << "ObjectData::insert inserted: " << values(attributeName(attr));
 }

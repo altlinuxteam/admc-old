@@ -2,15 +2,12 @@
 #define LDAPCONNECTION_H
 
 #include "ldapobject.h"
-#include "connector.h"
 
 class LdapConnection : public LdapObject
 {
 public:
-    LdapConnection(Connector &c);
+    LdapConnection(Connector &connector);
 
-private:
-    Connector &connector;
 };
 
 #endif // LDAPCONNECTION_H

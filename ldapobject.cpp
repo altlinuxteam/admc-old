@@ -1,12 +1,13 @@
 #include "ldapobject.h"
+#include "common.h"
 
 #include <QStringList>
 
-LdapObject::LdapObject(const ObjectData &data, LdapObject *parent, ObjectType objectType):
-    objectType(objectType)
+LdapObject::LdapObject(QString name, Connector &connector, LdapObject *parent, ObjectType objectType):
+    connector(connector), parentObject(parent), objectType(objectType), isFetched(false)
 {
-    parentObject = parent;
-    objectData = data;
+    qDebug() << "LdapObject::LdapObject: for" << name;
+    objectData.insert(NameAttr, name);
 }
 
 LdapObject::~LdapObject()
@@ -39,7 +40,24 @@ QVariant LdapObject::data(AttributeType attr) const
     return objectData.value(attr);
 }
 
-LdapObject *LdapObject::parent()
+QString LdapObject::name() const
+{
+    return objectData.value(NameAttr).toString();
+}
+
+QString LdapObject::path(QString child) const
+{
+    QString path = name();
+    if (!child.isNull())
+        path += QDir::separator() + child;
+
+    if (parentObject != nullptr && parentObject->type() != ConnectionType)
+        return parentObject->path(path);
+
+    return path;
+}
+
+LdapObject *LdapObject::parent() const
 {
     return parentObject;
 }
@@ -52,7 +70,30 @@ int LdapObject::row() const
     return 0;
 }
 
-ObjectType LdapObject::type()
+ObjectType LdapObject::type() const
 {
     return objectType;
+}
+
+bool LdapObject::canFetch() const
+{
+    return !isFetched;
+}
+
+void LdapObject::fetch()
+{
+    qDebug() << "LdapObject::LdapObject: fetch!!!";
+    queryData();
+    getChilds();
+    isFetched = true;
+}
+
+void LdapObject::queryData()
+{
+    connector.query(objectData, this);
+}
+
+void LdapObject::getChilds()
+{
+    connector.childs(childObjects, this);
 }
