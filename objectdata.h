@@ -43,16 +43,29 @@ enum AttributeType
     UnknownAttr
 };
 
+enum AttributeFormat {
+    StringFormat,
+    BASE64Format
+};
+
 QString attributeName(AttributeType attr);
 
-typedef QMap<QString, QString> ObjectMap;
+class Attribute: public QStringList
+{
+public:
+    Attribute(): format(StringFormat) {}
+    Attribute(QString &s, AttributeFormat format = StringFormat): QStringList(s), format(format) {}
+    AttributeFormat format;
+};
+
+typedef QMap<QString, Attribute> ObjectMap;
 class ObjectData: public ObjectMap
 {
 public:
     ObjectData();
 
-    QVariant insert(AttributeType attr, QString val);
-    QVariant value(AttributeType attr) const;
+    QVariant insert(QString val, AttributeType attrType);
+    QVariant value(AttributeType attrType) const;
 };
 
 #endif // OBJECTDATA_H

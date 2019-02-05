@@ -25,7 +25,7 @@ bool Connector::connect(QDir mountpoint)
         isMounted = true;
         return true;
     } else {
-        //isUpdated = false;
+        isUpdated = false;
     }
 
     return false;

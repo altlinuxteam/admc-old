@@ -7,7 +7,7 @@ LdapObject::LdapObject(QString name, Connector &connector, LdapObject *parent, O
     connector(connector), parentObject(parent), objectType(objectType), isFetched(false)
 {
     qDebug() << "LdapObject::LdapObject: for" << name;
-    objectData.insert(NameAttr, name);
+    objectData.insert(name, NameAttr);
 }
 
 LdapObject::~LdapObject()
