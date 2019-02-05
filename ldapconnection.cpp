@@ -15,15 +15,9 @@ void LdapConnection::fetchRoot()
 {
     qDebug() << "LdapConnection::fetch: fetch!!!";
     queryRootData();
-    getRootChilds();
 }
 
 void LdapConnection::queryRootData()
 {
-    connector.query(objectData, this);
-}
-
-void LdapConnection::getRootChilds()
-{
-    connector.childs(childObjects, this);
+    connector.queryRoot(objectData, childObjects, this);
 }

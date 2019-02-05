@@ -47,7 +47,6 @@ private:
     ObjectType objectType;
 
     void queryData();
-    void getChilds();
     bool isFetched;
 };
 

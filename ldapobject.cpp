@@ -96,23 +96,17 @@ bool LdapObject::canFetch() const
 void LdapObject::fetch()
 {
     qDebug() << "LdapObject::fetch: fetch!!!";
-    queryData();
 
     foreach (LdapObject *object, childObjects)
     {
         if (!object->isFetched)
-            object->getChilds();
+            object->queryData();
     }
-
-    isFetched = true;
 }
 
 void LdapObject::queryData()
 {
     connector.query(objectData, this);
-}
-
-void LdapObject::getChilds()
-{
     connector.childs(childObjects, this);
+    isFetched = true;
 }

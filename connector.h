@@ -20,9 +20,8 @@ public:
     bool connect(QDir mountpoint);
 
     void query(ObjectData &data, LdapObject *parent);
-    void query(ObjectData &data, LdapConnection *parent);
     void childs(LdapObjectList &objectList, LdapObject *parent);
-    void childs(LdapObjectList &objectList, LdapConnection *parent);
+    void queryRoot(ObjectData &data, LdapObjectList &objectList, LdapConnection *parent);
 
     QString server() const {
         return dc;

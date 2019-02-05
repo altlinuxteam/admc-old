@@ -13,7 +13,7 @@ Connector::Connector(QObject *parent) : QObject(parent), isMounted(false), isUpd
 bool Connector::connect(QString server)
 {
     dc = server;
-    return connect(QDir("/home/sin/work/samba/admc.git/mnt"));
+    return connect(QDir("/home/sin/work/samba/ui/admc/mnt"));
 }
 
 bool Connector::connect(QDir mountpoint)
@@ -37,15 +37,6 @@ void Connector::query(ObjectData &data, LdapObject *parent)
         qDebug() << "Connector::query: for null parent";
     } else {
         qDebug() << "Connector::query: " << parent->name();
-    }
-}
-
-void Connector::query(ObjectData &data, LdapConnection *parent)
-{
-    if (!parent) {
-        qDebug() << "Connector::query: for null connection";
-    } else {
-        qDebug() << "Connector::query: for connection" << parent->name();
     }
 }
 
@@ -79,16 +70,17 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
     }
 }
 
-void Connector::childs(LdapObjectList &objectList, LdapConnection *connection)
+void Connector::queryRoot(ObjectData &data, LdapObjectList &objectList, LdapConnection *connection)
 {
     if (!connection) {
-        qDebug() << "Connector::childs: connection is null!";
-        return;
-    }
+        qDebug() << "Connector::query: for null connection";
+    } else {
+        qDebug() << "Connector::query: for connection" << connection->name();
 
-    LdapObject *parent = connection;
-    childs(objectList, parent);
-    isUpdated = false;
+        LdapObject *parent = connection;
+        childs(objectList, parent);
+        isUpdated = false;
+    }
 }
 
 bool Connector::updated() const
