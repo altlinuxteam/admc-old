@@ -26,7 +26,5 @@ set (SOURCES
 
 add_executable(admc ${SOURCES})
 
-find_library(LDB_LIBRARY NAMES ldb)
-
 find_package(Qt5Widgets REQUIRED)
-target_link_libraries(admc Qt5::Widgets ${LDB_LIBRARY})
+target_link_libraries(admc Qt5::Widgets)

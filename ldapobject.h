@@ -17,7 +17,7 @@ class LdapObject
 {
 public:
     LdapObject(QString name, Connector &connector, LdapObject *parent = nullptr, ObjectType objectType = UnknownType);
-    ~LdapObject();
+    virtual ~LdapObject();
 
     void appendChild(LdapObject *child);
 
@@ -30,8 +30,8 @@ public:
     int row() const;
     LdapObject *parent() const;
     ObjectType type() const;
-    bool canFetch() const;
-    void fetch();
+    virtual bool canFetch() const;
+    virtual void fetch();
 
 protected:
     Connector &connector;
@@ -41,9 +41,9 @@ private:
 
 protected:
     ObjectData objectData;
+    LdapObjectList childObjects;
 
 private:
-    LdapObjectList childObjects;
     ObjectType objectType;
 
     void queryData();

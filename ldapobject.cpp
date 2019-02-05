@@ -47,6 +47,9 @@ QString LdapObject::name() const
 
 QString LdapObject::path(QString child) const
 {
+    if (type() == ConnectionType)
+        return QString(QDir::separator());
+
     QString path = name();
     if (!child.isNull())
         path += QDir::separator() + child;
@@ -82,7 +85,7 @@ bool LdapObject::canFetch() const
 
 void LdapObject::fetch()
 {
-    qDebug() << "LdapObject::LdapObject: fetch!!!";
+    qDebug() << "LdapObject::fetch: fetch!!!";
     queryData();
     getChilds();
     isFetched = true;

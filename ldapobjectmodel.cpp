@@ -99,21 +99,38 @@ bool LdapObjectModel::hasChildren(const QModelIndex &parent) const
 
 bool LdapObjectModel::canFetchMore(const QModelIndex &parent) const
 {
+    bool canFetch = false;
+
     if (!parent.isValid()) {
         qDebug() << "LdapObjectModel::canFetchMore: for not valid";
+        foreach (const LdapConnection *connection, connections)
+        {
+            if (connection->canFetch()) {
+                canFetch = true;
+                break;
+            }
+        }
     } else {
         LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
         qDebug() << "LdapObjectModel::canFetchMore: for object " << parentObject->name();
-        return parentObject->canFetch();
+        canFetch = parentObject->canFetch();
     }
 
-    return false;
+    qDebug() << "LdapObjectModel::canFetchMore: is " << (canFetch ? "true" : "false");
+    return canFetch;
 }
 
 void LdapObjectModel::fetchMore(const QModelIndex &parent)
 {
     if (!parent.isValid()) {
         qDebug() << "LdapObjectModel::fetchMore: for not valid";
+        foreach (LdapConnection *connection, connections)
+        {
+            if (connection->canFetch()) {
+                qDebug() << "LdapObjectModel::fetchMore: for connection " << connection->name();
+                connection->fetch();
+            }
+        }
     } else {
         LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
         qDebug() << "LdapObjectModel::fetchMore: for object " << parentObject->name();
