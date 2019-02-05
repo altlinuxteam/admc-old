@@ -80,14 +80,30 @@ ObjectType LdapObject::type() const
 
 bool LdapObject::canFetch() const
 {
-    return !isFetched;
+    bool canFetch = false;
+
+    foreach (const LdapObject *object, childObjects)
+    {
+        if (!object->isFetched) {
+            canFetch = true;
+            break;
+        }
+    }
+
+    return canFetch;
 }
 
 void LdapObject::fetch()
 {
     qDebug() << "LdapObject::fetch: fetch!!!";
     queryData();
-    getChilds();
+
+    foreach (LdapObject *object, childObjects)
+    {
+        if (!object->isFetched)
+            object->getChilds();
+    }
+
     isFetched = true;
 }
 

@@ -8,12 +8,12 @@ class LdapConnection : public LdapObject
 public:
     LdapConnection(Connector &connector);
 
-    bool canFetch() const override;
-    void fetch() override;
+    bool canFetchRoot() const;
+    void fetchRoot();
 
 private:
-    void queryData();
-    void getChilds();
+    void queryRootData();
+    void getRootChilds();
 
 };
 

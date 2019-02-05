@@ -6,24 +6,24 @@ LdapConnection::LdapConnection(Connector &connector):
 {
 }
 
-bool LdapConnection::canFetch() const
+bool LdapConnection::canFetchRoot() const
 {
     return connector.updated();
 }
 
-void LdapConnection::fetch()
+void LdapConnection::fetchRoot()
 {
     qDebug() << "LdapConnection::fetch: fetch!!!";
-    queryData();
-    getChilds();
+    queryRootData();
+    getRootChilds();
 }
 
-void LdapConnection::queryData()
+void LdapConnection::queryRootData()
 {
     connector.query(objectData, this);
 }
 
-void LdapConnection::getChilds()
+void LdapConnection::getRootChilds()
 {
     connector.childs(childObjects, this);
 }

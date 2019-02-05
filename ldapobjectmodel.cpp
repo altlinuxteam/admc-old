@@ -14,20 +14,25 @@ QVariant LdapObjectModel::headerData(int section, Qt::Orientation orientation, i
 
 QModelIndex LdapObjectModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!hasIndex(row, column, parent))
-        return QModelIndex();
-
     LdapObject *childObject;
 
-    if (!parent.isValid())
+    if (!hasIndex(row, column, parent)) {
+        qDebug() << "LdapObjectModel::index: not hasIndex for" << row << column;
+        return QModelIndex();
+    }
+
+    if (!parent.isValid()) {
         childObject = connections.at(row);
-    else {
+        qDebug() << "LdapObjectModel::index: not valid";
+    } else {
         LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
         childObject = parentObject->child(row);
     }
 
-    if (childObject)
+    if (childObject) {
+        qDebug() << "LdapObjectModel::index: createIndex for object" << row << column << childObject->name();
         return createIndex(row, column, childObject);
+    }
     else
         return QModelIndex();
 }
@@ -40,9 +45,10 @@ QModelIndex LdapObjectModel::parent(const QModelIndex &index) const
     LdapObject *childObject = static_cast<LdapObject*>(index.internalPointer());
     LdapObject *const parentObject = childObject->parent();
 
-    if (parentObject == nullptr || parentObject->type() != ConnectionType)
+    if (parentObject == nullptr)
         return QModelIndex();
 
+    qDebug() << "LdapObjectModel::parent: createIndex for object" << parentObject->row() << 0;
     return createIndex(parentObject->row(), 0, parentObject);
 }
 
@@ -53,11 +59,11 @@ int LdapObjectModel::rowCount(const QModelIndex &parent) const
 
     if (!parent.isValid()) {
         rows = connections.size();
-        qDebug() << "LdapObjectModel::rowCount: for connections " << rows;
+        qDebug() << "LdapObjectModel::rowCount: for connections" << rows;
     } else {
         parentObject = static_cast<LdapObject*>(parent.internalPointer());
         rows = parentObject->childCount();
-        qDebug() << "LdapObjectModel::rowCount: for object " << rows;
+        qDebug() << "LdapObjectModel::rowCount: for object" << parent.row() << parent.column() << "with" << rows;
     }
 
     return rows;
@@ -66,7 +72,7 @@ int LdapObjectModel::rowCount(const QModelIndex &parent) const
 int LdapObjectModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
-        qDebug() << "LdapObjectModel::columnCount: parent is valid";
+        qDebug() << "LdapObjectModel::columnCount: parent is valid" << parent.row() << parent.column();
         qDebug() << "LdapObjectModel::columnCount: " << static_cast<LdapObject*>(parent.internalPointer())->columnCount();
         return static_cast<LdapObject*>(parent.internalPointer())->columnCount();
     }
@@ -88,7 +94,7 @@ bool LdapObjectModel::hasChildren(const QModelIndex &parent) const
         qDebug() << "LdapObjectModel::hasChildren parent is not valid";
         return !connections.empty();
     } else {
-        qDebug() << "LdapObjectModel::hasChildren parent is valid";
+        qDebug() << "LdapObjectModel::hasChildren parent is valid" << parent.row() << parent.column();
         parentObject = static_cast<LdapObject*>(parent.internalPointer());
     }
 
@@ -100,19 +106,22 @@ bool LdapObjectModel::hasChildren(const QModelIndex &parent) const
 bool LdapObjectModel::canFetchMore(const QModelIndex &parent) const
 {
     bool canFetch = false;
+    LdapObject *parentObject = nullptr;
 
-    if (!parent.isValid()) {
-        qDebug() << "LdapObjectModel::canFetchMore: for not valid";
+    if (parent.isValid())
+        parentObject = static_cast<LdapObject*>(parent.internalPointer());
+
+    if (parentObject == nullptr) {
+        qDebug() << "LdapObjectModel::canFetchMore: for connections";
         foreach (const LdapConnection *connection, connections)
         {
-            if (connection->canFetch()) {
+            if (connection->canFetchRoot()) {
                 canFetch = true;
                 break;
             }
         }
     } else {
-        LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
-        qDebug() << "LdapObjectModel::canFetchMore: for object " << parentObject->name();
+        qDebug() << "LdapObjectModel::canFetchMore: for objects with parent" << parent.row() << parent.column() << parentObject->name();
         canFetch = parentObject->canFetch();
     }
 
@@ -126,15 +135,17 @@ void LdapObjectModel::fetchMore(const QModelIndex &parent)
         qDebug() << "LdapObjectModel::fetchMore: for not valid";
         foreach (LdapConnection *connection, connections)
         {
-            if (connection->canFetch()) {
-                qDebug() << "LdapObjectModel::fetchMore: for connection " << connection->name();
-                connection->fetch();
+            if (connection->canFetchRoot()) {
+                qDebug() << "LdapObjectModel::fetchMore: for connection" << connection->name();
+                connection->fetchRoot();
             }
         }
     } else {
         LdapObject *parentObject = static_cast<LdapObject*>(parent.internalPointer());
-        qDebug() << "LdapObjectModel::fetchMore: for object " << parentObject->name();
-        parentObject->fetch();
+        if (parentObject->canFetch()) {
+            qDebug() << "LdapObjectModel::fetchMore: for object" << parent.row() << parent.column() << parentObject->name();
+            parentObject->fetch();
+        }
     }
 }
 
@@ -152,7 +163,7 @@ QVariant LdapObjectModel::data(const QModelIndex &index, int role) const
 
     LdapObject *object = static_cast<LdapObject*>(index.internalPointer());
 
-    qDebug() << "LdapObjectModel::data return NameAttr for ObjectType" << object->type();
+    qDebug() << "LdapObjectModel::data return NameAttr for ObjectType" << index.row() << index.column() << object->type();
     return object->data(NameAttr);
 }
 

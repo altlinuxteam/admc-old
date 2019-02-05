@@ -30,8 +30,8 @@ public:
     int row() const;
     LdapObject *parent() const;
     ObjectType type() const;
-    virtual bool canFetch() const;
-    virtual void fetch();
+    bool canFetch() const;
+    void fetch();
 
 protected:
     Connector &connector;

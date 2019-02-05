@@ -56,7 +56,7 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         return;
     }
 
-    qDeleteAll(objectList);
+    //qDeleteAll(objectList);
 
     qDebug() << "Connector::childs: root path is" << root.path();
     QDir adfsPath(root.path() + QDir::separator() + parent->path());
@@ -71,8 +71,9 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
 
     QDirIterator it(adfsPath);
     while (it.hasNext()) {
-        qDebug() << "Connector::childs: " << it.next();
-        QFileInfo info(it.next());
+        QString child = it.next();
+        qDebug() << "Connector::childs: " << child;
+        QFileInfo info(child);
         if(info.isDir())
             objectList.append(new LdapObject(info.fileName(), *this, parent));
     }
