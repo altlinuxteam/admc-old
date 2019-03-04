@@ -25,6 +25,7 @@ set (SOURCES
         ldaptablemodel.cpp
         ui/mainwindow.ui
         ui/userproperties.ui
+        ui/connectionproperties.ui
         resources.qrc
     )
 

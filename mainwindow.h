@@ -38,7 +38,10 @@ private:
     LdapTableModel *table;
 
     QTabWidget *userProperties;
+    QTabWidget *connectionProperties;
+    QTabWidget *currentProperties;
 
+    void setProperty(QTabWidget *widget);
 };
 
 #endif // MAINWINDOW_H

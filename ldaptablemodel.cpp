@@ -54,3 +54,13 @@ void LdapTableModel::setRootObject(LdapObject *object)
     qDebug() << "LdapTableModel: setRootObject done" << object;
     endResetModel();
 }
+
+QModelIndex LdapTableModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (parentObject == nullptr)
+        return QModelIndex();
+
+    LdapObject* object = parentObject->child(row);
+    return createIndex(row, column, object);
+}
+

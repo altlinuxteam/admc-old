@@ -16,7 +16,14 @@ MainWindow::MainWindow(QWidget *parent) :
     userProperties = new QTabWidget(this);
     Ui_UserProperties uiUserProperties;
     uiUserProperties.setupUi(userProperties);
+    userProperties->hide();
     splitter->addWidget(userProperties);
+
+    connectionProperties = new QTabWidget(this);
+    Ui_ConnectionProperties uiConnectionProperties;
+    uiConnectionProperties.setupUi(connectionProperties);
+    splitter->addWidget(connectionProperties);
+    currentProperties = connectionProperties;
 
     model = new LdapObjectModel(this);
     hierarchy->setModel(model);
@@ -88,4 +95,16 @@ void MainWindow::chooseObject(const QModelIndex &index)
 void MainWindow::chooseProperty(const QModelIndex &index)
 {
     qDebug() << "chooseProperty()";
+
+    LdapObject* object = static_cast<LdapObject*>(index.internalPointer());
+    if (object->type() == UserType)
+        setProperty(userProperties);
+}
+
+void MainWindow::setProperty(QTabWidget *widget)
+{
+    if (currentProperties != widget) {
+        currentProperties->hide();
+        widget->show();
+    }
 }

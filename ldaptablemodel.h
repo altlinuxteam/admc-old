@@ -16,6 +16,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void setRootObject(LdapObject* object);
