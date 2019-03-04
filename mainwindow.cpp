@@ -1,6 +1,7 @@
 #include "common.h"
 #include "mainwindow.h"
 #include "ldapobjectmodel.h"
+#include "ldaptablemodel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), settings("BaseALT", "admc")
@@ -9,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setupUi(this);
     createMenu();
 
-    LdapObjectModel *model = new LdapObjectModel(this);
+    model = new LdapObjectModel(this);
     hierarchy->setModel(model);
     hierarchy->setHeaderHidden(true);
 
@@ -17,6 +18,22 @@ MainWindow::MainWindow(QWidget *parent) :
     Connector *c = connectors.back();
     c->connect("dc0.domain.alt");
     model->addConnector(*c);
+
+    table = new LdapTableModel(this);
+    objects->setShowGrid(false);
+    objects->horizontalHeader()->hide();
+    objects->verticalHeader()->hide();
+    objects->horizontalHeader()->setMinimumSectionSize(1);
+    objects->verticalHeader()->setMinimumSectionSize(1);
+    objects->verticalHeader()->setMaximumSectionSize(1);
+    objects->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //objects->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    objects->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    objects->verticalHeader()->setDefaultSectionSize(28);
+    objects->resizeRowsToContents();
+    objects->setModel(table);
+
+    QObject::connect(hierarchy, &QTreeView::pressed, this, &MainWindow::chooseObject);
 }
 
 void MainWindow::createMenu()
@@ -43,4 +60,20 @@ void MainWindow::newFile()
 void MainWindow::openFile()
 {
     qDebug() << "openFile();";
+}
+
+void MainWindow::chooseObject(const QModelIndex &index)
+{
+    qDebug() << "chooseObject();";
+
+    if (!index.isValid()) {
+        qDebug() << "chooseObject(): got invalid index";
+        return;
+    }
+    qDebug() << "chooseObject(): got valid index" << (void*)table;
+
+    table->setRootObject(static_cast<LdapObject*>(index.internalPointer()));
+    //table->submit();
+    //objects->update(0,0,1,1);
+    objects->setModel(table);
 }

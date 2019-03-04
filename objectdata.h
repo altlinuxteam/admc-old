@@ -64,7 +64,7 @@ class ObjectData: public ObjectMap
 public:
     ObjectData();
 
-    QVariant insert(QString val, AttributeType attrType);
+    void insert(QString val, AttributeType attrType);
     QVariant value(AttributeType attrType) const;
 };
 

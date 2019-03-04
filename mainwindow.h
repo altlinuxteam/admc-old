@@ -7,6 +7,9 @@
 
 #include "connector.h"
 
+class LdapObjectModel;
+class LdapTableModel;
+
 class MainWindow : public QMainWindow, public Ui_MainWindow
 {
     Q_OBJECT
@@ -18,6 +21,7 @@ signals:
 public slots:
     void newFile();
     void openFile();
+    void chooseObject(const QModelIndex &index);
     
 private:
     void createMenu();
@@ -28,6 +32,9 @@ private:
     QSettings settings;
 
     QList<Connector*> connectors;
+
+    LdapObjectModel *model;
+    LdapTableModel *table;
 };
 
 #endif // MAINWINDOW_H

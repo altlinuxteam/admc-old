@@ -20,6 +20,8 @@ set (SOURCES
         ldapobject.cpp
         ldapobjectmodel.h
         ldapobjectmodel.cpp
+        ldaptablemodel.h
+        ldaptablemodel.cpp
         mainwindow.ui
         resources.qrc
     )

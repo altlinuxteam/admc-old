@@ -53,17 +53,17 @@ ObjectData::ObjectData()
 
 QVariant ObjectData::value(AttributeType attrType) const
 {
-    qDebug() << "ObjectData::value for attr: " << attrType;
+//    qDebug() << "ObjectData::value for attr: " << attrType;
     const Attribute val = ObjectMap::value(attributeName(attrType));
 
-    qDebug() << "ObjectData::value size: " << val.size();
+//    qDebug() << "ObjectData::value size: " << val.size();
     if (val.size() <= 0)
         return QString("UnknownAttr");
 
     return val.first();
 }
 
-QVariant ObjectData::insert(QString val, AttributeType attrType) {
+void ObjectData::insert(QString val, AttributeType attrType) {
     QString key = attributeName(attrType);
     qDebug() << "ObjectData::insert for attrType: " << attrType << val;
     ObjectMap::insert(key, val);

@@ -40,29 +40,7 @@
         <number>0</number>
        </attribute>
       </widget>
-      <widget class="QTreeWidget" name="objects">
-       <property name="rootIsDecorated">
-        <bool>false</bool>
-       </property>
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-       <column>
-        <property name="text">
-         <string>Name</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Type</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Description</string>
-        </property>
-       </column>
-      </widget>
+      <widget class="QTableView" name="objects"/>
       <widget class="QTabWidget" name="properties">
        <property name="currentIndex">
         <number>0</number>
