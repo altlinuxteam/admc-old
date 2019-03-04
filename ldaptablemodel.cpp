@@ -14,11 +14,10 @@ QVariant LdapTableModel::headerData(int section, Qt::Orientation orientation, in
 
 int LdapTableModel::rowCount(const QModelIndex &parent) const
 {
-    qDebug() << "LdapTableModel::rowCount" << parentObject << (void*)this;
     if (parentObject == nullptr)
         return 0;
 
-    qDebug() << "LdapTableModel::rowCount =" << parentObject->childCount();
+//    qDebug() << "LdapTableModel::rowCount =" << parentObject->childCount();
 
     return parentObject->childCount();
 }
@@ -33,7 +32,6 @@ int LdapTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant LdapTableModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "LdapTableModel::data";
     if (parentObject == nullptr)
         return QVariant();
 
@@ -41,7 +39,7 @@ QVariant LdapTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     LdapObject* object = parentObject->child(index.row());
-    qDebug() << "LdapTableModel::data return NameAttr for ObjectType" << index.row() << index.column() << object->type() << object->name();
+//    qDebug() << "LdapTableModel::data return NameAttr for ObjectType" << index.row() << index.column() << object->type() << object->name();
     return object->data(NameAttr);
 }
 

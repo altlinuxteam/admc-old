@@ -22,6 +22,7 @@ public slots:
     void newFile();
     void openFile();
     void chooseObject(const QModelIndex &index);
+    void chooseProperty(const QModelIndex &index);
     
 private:
     void createMenu();
@@ -35,6 +36,9 @@ private:
 
     LdapObjectModel *model;
     LdapTableModel *table;
+
+    QTabWidget *userProperties;
+
 };
 
 #endif // MAINWINDOW_H

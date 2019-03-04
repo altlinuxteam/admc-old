@@ -4,6 +4,7 @@ project (ADMC)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS ui)
 
 set (SOURCES
         main.cpp
@@ -22,7 +23,8 @@ set (SOURCES
         ldapobjectmodel.cpp
         ldaptablemodel.h
         ldaptablemodel.cpp
-        mainwindow.ui
+        ui/mainwindow.ui
+        ui/userproperties.ui
         resources.qrc
     )
 

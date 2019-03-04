@@ -3,12 +3,20 @@
 #include "ldapobjectmodel.h"
 #include "ldaptablemodel.h"
 
+#include "ui_userproperties.h"
+#include "ui_connectionproperties.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), settings("BaseALT", "admc")
 {
     qDebug() << "Start MainWindow";
     setupUi(this);
     createMenu();
+
+    userProperties = new QTabWidget(this);
+    Ui_UserProperties uiUserProperties;
+    uiUserProperties.setupUi(userProperties);
+    splitter->addWidget(userProperties);
 
     model = new LdapObjectModel(this);
     hierarchy->setModel(model);
@@ -34,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
     objects->setModel(table);
 
     QObject::connect(hierarchy, &QTreeView::pressed, this, &MainWindow::chooseObject);
+    QObject::connect(objects, &QTreeView::pressed, this, &MainWindow::chooseProperty);
 }
 
 void MainWindow::createMenu()
@@ -73,7 +82,10 @@ void MainWindow::chooseObject(const QModelIndex &index)
     qDebug() << "chooseObject(): got valid index" << (void*)table;
 
     table->setRootObject(static_cast<LdapObject*>(index.internalPointer()));
-    //table->submit();
-    //objects->update(0,0,1,1);
     objects->setModel(table);
+}
+
+void MainWindow::chooseProperty(const QModelIndex &index)
+{
+    qDebug() << "chooseProperty()";
 }
