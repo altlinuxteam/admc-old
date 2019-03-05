@@ -65,8 +65,26 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         QString child = it.next();
         qDebug() << "Connector::childs: " << child;
         QFileInfo info(child);
-        if(info.isDir())
-            objectList.append(new LdapObject(info.fileName(), *this, parent));
+        QFileInfo attributesInfo(it.next(), ".attributes");
+        if(info.isDir() && attributesInfo.isFile() && attributesInfo.isReadable()) {
+            LdapObject *object = new LdapObject(info.fileName(), *this, parent);
+            QFile attributesFile(attributesInfo.filePath());
+            if (attributesFile.open(QIODevice::ReadOnly))
+            {
+               QTextStream in(&attributesFile);
+               QRegExp rx("^(\\S+): (.*)$");
+               while (!in.atEnd())
+               {
+                  QString line = in.readLine();
+                  rx.indexIn(line);
+                  qDebug() << "attribute: " << rx.capturedTexts();
+               }
+               attributesFile.close();
+            } else {
+                qDebug() << "attribute not opened: " << attributesInfo.path();
+            }
+            objectList.append(object);
+        }
     }
 }
 
