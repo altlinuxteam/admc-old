@@ -72,11 +72,18 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
             if (attributesFile.open(QIODevice::ReadOnly))
             {
                QTextStream in(&attributesFile);
-               QRegularExpression rx("^(\\S+): (.*)$");
+               QRegularExpression attributePattern("^(\\S+): (.*)$");
+               QRegularExpression attributeBase64Pattern("^(\\S+):: (.*)$");
+               QRegularExpression commentPattern("^#");
                while (!in.atEnd())
                {
                   QString line = in.readLine();
-                  QRegularExpressionMatch res = rx.match(line);
+                  QRegularExpressionMatch res = commentPattern.match(line);
+                  if (res.hasMatch())
+                      continue;
+                  res = attributeBase64Pattern.match(line);
+                  if (!res.hasMatch())
+                    res = attributePattern.match(line);
                   if (res.hasMatch())
                      qDebug() << "attribute: " << res.capturedTexts();
                }
