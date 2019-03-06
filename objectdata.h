@@ -5,7 +5,7 @@
 #include <QString>
 #include <QVariant>
 
-enum AttributeType
+enum AttributeName
 {
     NameAttr,
     DNAttr,
@@ -43,12 +43,39 @@ enum AttributeType
     UnknownAttr
 };
 
+enum AttributeType {
+    BooleanType,
+    IntegerType,
+    EnumerationType,
+    LargeIntegerType,
+    ObjectAccessPointType,
+    ObjectDNStringType,
+    ObjectORNameType,
+    ObjectDNBinaryType,
+    ObjectDSDNType,
+    ObjectPresentationAddressType,
+    ObjectReplicaLinkType,
+    StringCaseType,
+    StringIA5Type,
+    StringNTSecDescType,
+    StringNumericType,
+    StringObjectIdentifierType,
+    StringOctetType,
+    StringPrintableType,
+    StringSidType,
+    StringTeletexType,
+    StringUnicodeType,
+    StringUTCTimeType,
+    StringGeneralizedTimeType,
+    UnknownAttributeType
+};
+
 enum AttributeFormat {
     StringFormat,
     BASE64Format
 };
 
-QString attributeName(AttributeType attr);
+QString attributeName(AttributeName attr);
 
 class Attribute: public QStringList
 {
@@ -64,8 +91,9 @@ class ObjectData: public ObjectMap
 public:
     ObjectData();
 
-    void insert(QString val, AttributeType attrType);
-    QVariant value(AttributeType attrType) const;
+    void insert(QString val, AttributeName attrName);
+    void insert(QString val, QString attr);
+    QVariant value(AttributeName attrName) const;
 };
 
 #endif // OBJECTDATA_H

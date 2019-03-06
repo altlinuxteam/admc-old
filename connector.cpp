@@ -89,13 +89,15 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
                       continue;
                   res = attributeBase64Pattern.match(line);
                   if (!res.hasMatch())
-                    res = attributePattern.match(line);
-                  if (res.hasMatch())
+                     res = attributePattern.match(line);
+                  if (res.hasMatch()) {
+                     object->appendAttribute(res.captured(2), res.captured(1));
                      qDebug() << "attribute: " << res.capturedTexts();
+                  }
                }
                attributesFile.close();
             } else {
-                qDebug() << "attribute not opened: " << attributesInfo.path();
+               qDebug() << "attribute not opened: " << attributesInfo.path();
             }
             objectList.append(object);
         } else {

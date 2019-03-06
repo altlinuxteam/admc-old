@@ -20,11 +20,12 @@ public:
     virtual ~LdapObject();
 
     void appendChild(LdapObject *child);
+    void appendAttribute(QString name, QString value);
 
     LdapObject *child(int row);
     int childCount() const;
     int columnCount() const;
-    QVariant data(AttributeType attr) const;
+    QVariant data(AttributeName attr) const;
     QString name() const;
     QString path(QString parent = QString()) const;
     int row() const;

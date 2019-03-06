@@ -38,12 +38,46 @@ const char* attributeNames[]
     "isCriticalSystemObject"
 };
 
-QString attributeName(AttributeType attr)
+const char* attributeTypes[] {
+    "Boolean",
+    "Integer",
+    "Enumeration",
+    "LargeInteger",
+    "ObjectAccessPoint",
+    "ObjectDNString",
+    "ObjectORName",
+    "ObjectDNBinary",
+    "ObjectDSDN",
+    "ObjectPresentationAddress",
+    "ObjectReplicaLink",
+    "StringCase",
+    "StringIA5",
+    "StringNTSecDesc",
+    "StringNumeric",
+    "StringObjectIdentifier",
+    "StringOctet",
+    "StringPrintable",
+    "StringSid",
+    "StringTeletex",
+    "StringUnicode",
+    "StringUTCTime",
+    "StringGeneralizedTime"
+};
+
+QString attributeName(AttributeName attr)
 {
     if (attr >= UnknownAttr)
-        return QString("UknownAttr");
+        return QString("UknownAttributeName");
 
     return QString(attributeNames[attr]);
+}
+
+QString attributeType(AttributeType attrType)
+{
+    if (attrType >= UnknownAttributeType)
+        return QString("UnknownAttributeType");
+
+    return QString(attributeTypes[attrType]);
 }
 
 ObjectData::ObjectData()
@@ -51,7 +85,7 @@ ObjectData::ObjectData()
 
 }
 
-QVariant ObjectData::value(AttributeType attrType) const
+QVariant ObjectData::value(AttributeName attrType) const
 {
 //    qDebug() << "ObjectData::value for attr: " << attrType;
     const Attribute val = ObjectMap::value(attributeName(attrType));
@@ -63,9 +97,15 @@ QVariant ObjectData::value(AttributeType attrType) const
     return val.first();
 }
 
-void ObjectData::insert(QString val, AttributeType attrType) {
-    QString key = attributeName(attrType);
-    qDebug() << "ObjectData::insert for attrType: " << attrType << val;
+void ObjectData::insert(QString val, AttributeName attrName) {
+    QString key = attributeName(attrName);
+    qDebug() << "ObjectData::insert for attrName: " << attrName << val;
     ObjectMap::insert(key, val);
-    qDebug() << "ObjectData::insert inserted: " << values(attributeName(attrType));
+    qDebug() << "ObjectData::insert inserted: " << values(attributeName(attrName));
+}
+
+void ObjectData::insert(QString val, QString attr) {
+    qDebug() << "ObjectData::insert for attr: " << attr << val;
+    ObjectMap::insert(attr, val);
+    qDebug() << "ObjectData::insert inserted by name: " << values(attr);
 }

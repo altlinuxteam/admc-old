@@ -20,6 +20,11 @@ void LdapObject::appendChild(LdapObject *object)
     childObjects.append(object);
 }
 
+void LdapObject::appendAttribute(QString name, QString value)
+{
+    objectData.insert(value, name);
+}
+
 LdapObject *LdapObject::child(int row)
 {
     return childObjects.value(row);
@@ -35,7 +40,7 @@ int LdapObject::columnCount() const
     return objectData.count();
 }
 
-QVariant LdapObject::data(AttributeType attr) const
+QVariant LdapObject::data(AttributeName attr) const
 {
     return objectData.value(attr);
 }
