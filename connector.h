@@ -27,6 +27,8 @@ public:
         return dc;
     }
 
+    static QStringList search(QString server = QString());
+
     bool updated() const;
 signals:
 

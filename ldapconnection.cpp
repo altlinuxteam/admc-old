@@ -4,6 +4,7 @@
 LdapConnection::LdapConnection(Connector &connector):
     LdapObject(connector.server(), connector, nullptr, ConnectionType)
 {
+    qDebug() << "LdapConnection::LdapConnection: " << connector.server();
 }
 
 bool LdapConnection::canFetchRoot() const

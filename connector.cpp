@@ -12,7 +12,11 @@ Connector::Connector(QObject *parent) : QObject(parent), isMounted(false), isUpd
 
 bool Connector::connect(QString server)
 {
+    QStringList mounts = search(server);
     dc = server;
+    qDebug() << "Connector::connect: mounts " << mounts << ", server " << server;
+    if (!mounts.empty())
+        return connect(QDir(mounts.at(0)));
     return connect(QDir("/home/sin/work/samba/ui/admc/mnt"));
 }
 
@@ -22,9 +26,11 @@ bool Connector::connect(QDir mountpoint)
 
     if (mountpoint.isReadable())
     {
+        qDebug() << "Connector::connect: " << mountpoint;
         isMounted = true;
         return true;
     } else {
+        qDebug() << "Connector::connect: not readable " << mountpoint;
         isUpdated = false;
     }
 
@@ -65,7 +71,7 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         QString child = it.next();
         qDebug() << "Connector::childs: " << child;
         QFileInfo info(child);
-        QFileInfo attributesInfo(it.next(), ".attributes");
+        QFileInfo attributesInfo(child, ".attributes");
         if(info.isDir() && attributesInfo.isFile() && attributesInfo.isReadable()) {
             LdapObject *object = new LdapObject(info.fileName(), *this, parent);
             QFile attributesFile(attributesInfo.filePath());
@@ -92,6 +98,8 @@ void Connector::childs(LdapObjectList &objectList, LdapObject *parent)
                 qDebug() << "attribute not opened: " << attributesInfo.path();
             }
             objectList.append(object);
+        } else {
+            qDebug() << "Connector::child not dir: " << child;
         }
     }
 }
@@ -112,4 +120,31 @@ void Connector::queryRoot(ObjectData &data, LdapObjectList &objectList, LdapConn
 bool Connector::updated() const
 {
     return isUpdated;
+}
+
+QStringList Connector::search(QString server)
+{
+    QStringList mounts;
+    QFile mtabFile("/proc/mounts");
+    if (mtabFile.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&mtabFile);
+        QRegularExpression mtabPattern("^(adfs|hadfs) (.*) fuse.(\\S*) ");
+        qDebug() << "mtab opened: " << mtabFile.fileName();
+        QString line = in.readLine();
+        while (!line.isEmpty()) {
+            QRegularExpressionMatch res = mtabPattern.match(line);
+            if (res.hasMatch()) {
+                if (server.isNull() || server == res.capturedTexts().at(3))
+                    mounts << res.capturedTexts().at(2);
+                qDebug() << "mtab: " << res.capturedTexts();
+                qDebug() << "mtab mounts: " << mounts << " for " << res.capturedTexts().at(3) << "(" << server << ")";
+            }
+            line = in.readLine();
+        }
+        mtabFile.close();
+    } else {
+        qDebug() << "mtab file not opened: " << mtabFile.errorString();
+    }
+    return mounts;
 }
