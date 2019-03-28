@@ -20,7 +20,7 @@ public:
     virtual ~LdapObject();
 
     void appendChild(LdapObject *child);
-    void appendAttribute(QString name, QString value);
+    void appendAttribute(QString name, QString type, QString value);
 
     LdapObject *child(int row);
     int childCount() const;

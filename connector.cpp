@@ -152,37 +152,47 @@ bool Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         QString child = it.next();
         qDebug() << "Connector::childs: " << child;
         QFileInfo info(child);
-        QFileInfo attributesInfo(child, ".attributes");
+        QFileInfo attributesInfo(child, ".attributes.json");
         if(info.isDir()) {
             if (attributesInfo.isFile() && attributesInfo.isReadable()) {
-                qDebug() << "Connector::child attribute file not exists or not readable: " << attributesInfo.path();
+                qDebug() << "Connector::child attribute file not exists or not readable: " << attributesInfo.filePath();
                 continue;
             }
             LdapObject *object = new LdapObject(info.fileName(), *this, parent);
             QFile attributesFile(attributesInfo.filePath());
             if (attributesFile.open(QIODevice::ReadOnly))
             {
-               QTextStream in(&attributesFile);
-               QRegularExpression attributePattern("^(\\S+): (.*)$");
-               QRegularExpression attributeBase64Pattern("^(\\S+):: (.*)$");
-               QRegularExpression commentPattern("^#");
-               while (!in.atEnd())
-               {
-                  QString line = in.readLine();
-                  QRegularExpressionMatch res = commentPattern.match(line);
-                  if (res.hasMatch())
-                      continue;
-                  res = attributeBase64Pattern.match(line);
-                  if (!res.hasMatch())
-                     res = attributePattern.match(line);
-                  if (res.hasMatch()) {
-                     object->appendAttribute(res.captured(2), res.captured(1));
-                     qDebug() << "attribute: " << res.capturedTexts();
-                  }
-               }
-               attributesFile.close();
+                QByteArray attributesData = attributesFile.readAll();
+                QJsonDocument attributesDocument(QJsonDocument::fromJson(attributesData));
+
+                QJsonObject jsonObject = attributesDocument.object();
+                if (jsonObject.contains("trDN") && jsonObject["trDN"].isString()) {
+                    QString dn = jsonObject["trDN"].toString();
+
+                    if (jsonObject.contains("trAttrs") && jsonObject["trAttrs"].isObject()) {
+                        object->appendAttribute("dn", "ObjectDSDN", dn);
+                        qDebug() << "attribute dn: " << dn;
+
+                        QJsonObject jsonAttrs = jsonObject["trAttrs"].toObject();
+                        foreach(const QString& key, jsonAttrs.keys()) {
+                            if (!jsonAttrs[key].isArray())
+                                continue;
+                            QJsonArray attrArray = jsonAttrs[key].toArray();
+                            if (!attrArray[0].isObject() || !attrArray[1].isArray())
+                                continue;
+                            QJsonObject attrTypeTag = attrArray[0].toObject();
+                            QJsonArray attrValues = attrArray[1].toArray();
+                            if (!attrTypeTag["tag"].isString() || !attrValues[0].isString())
+                                continue;
+                            QString value = attrValues[0].toString();
+                            QString type = attrTypeTag["tag"].toString();
+                            object->appendAttribute(key, type, value);
+                            qDebug() << "attribute: " << key << type << value;
+                        }
+                    }
+                }
             } else {
-               qDebug() << "attribute not opened: " << attributesInfo.path();
+               qDebug() << "attribute not opened: " << attributesInfo.filePath();
             }
             objectList.append(object);
         } else {

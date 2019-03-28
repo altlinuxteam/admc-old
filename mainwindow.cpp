@@ -45,9 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     objects->verticalHeader()->setMinimumSectionSize(1);
     objects->verticalHeader()->setMaximumSectionSize(1);
     objects->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    //objects->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    objects->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
-    objects->verticalHeader()->setDefaultSectionSize(28);
+    objects->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //objects->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    objects->verticalHeader()->setDefaultSectionSize(22);
     objects->resizeRowsToContents();
     objects->setModel(table);
 

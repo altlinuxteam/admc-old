@@ -80,6 +80,18 @@ QString attributeType(AttributeType attrType)
     return QString(attributeTypes[attrType]);
 }
 
+AttributeType attributeTypeByTypeName(QString type)
+{
+    for (unsigned int attrType = 0; attrType < UnknownAttributeType; attrType++)
+    {
+        if (type == attributeTypes[attrType])
+            return (AttributeType) attrType;
+    }
+
+    return UnknownAttributeType;
+}
+
+
 ObjectData::ObjectData()
 {
 
@@ -88,7 +100,7 @@ ObjectData::ObjectData()
 QVariant ObjectData::value(AttributeName attrType) const
 {
 //    qDebug() << "ObjectData::value for attr: " << attrType;
-    const Attribute val = ObjectMap::value(attributeName(attrType));
+    const Attribute val(ObjectMap::value(attributeName(attrType)));
 
 //    qDebug() << "ObjectData::value size: " << val.size();
     if (val.size() <= 0)
@@ -97,15 +109,17 @@ QVariant ObjectData::value(AttributeName attrType) const
     return val.first();
 }
 
-void ObjectData::insert(QString val, AttributeName attrName) {
-    QString key = attributeName(attrName);
-    qDebug() << "ObjectData::insert for attrName: " << attrName << val;
-    ObjectMap::insert(key, val);
+void ObjectData::insert(AttributeName attrName, AttributeType attrType, QString val) {
+    QString attr = attributeName(attrName);
+    QString type = attributeType(attrType);
+    qDebug() << "ObjectData::insert for attrName: " << attrName << val << type;
+    ObjectMap::insert(attr, Attribute(val, attrType));
     qDebug() << "ObjectData::insert inserted: " << values(attributeName(attrName));
 }
 
-void ObjectData::insert(QString val, QString attr) {
-    qDebug() << "ObjectData::insert for attr: " << attr << val;
-    ObjectMap::insert(attr, val);
+void ObjectData::insert(QString attr, QString type, QString val) {
+    AttributeType attrType = attributeTypeByTypeName(type);
+    qDebug() << "ObjectData::insert for attr: " << attr << val << type;
+    ObjectMap::insert(attr, Attribute(val, attrType));
     qDebug() << "ObjectData::insert inserted by name: " << values(attr);
 }

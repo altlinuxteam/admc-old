@@ -67,7 +67,8 @@ enum AttributeType {
     StringUnicodeType,
     StringUTCTimeType,
     StringGeneralizedTimeType,
-    UnknownAttributeType
+    UnknownAttributeType,
+    FirstAttributeType = BooleanType
 };
 
 enum AttributeFormat {
@@ -80,8 +81,9 @@ QString attributeName(AttributeName attr);
 class Attribute: public QStringList
 {
 public:
-    Attribute(): format(StringFormat) {}
-    Attribute(QString &s, AttributeFormat format = StringFormat): QStringList(s), format(format) {}
+    Attribute(): type(UnknownAttributeType), format(StringFormat) {}
+    Attribute(QString &s, AttributeType t, AttributeFormat f = StringFormat): QStringList(s), type(t), format(f) {}
+    AttributeType type;
     AttributeFormat format;
 };
 
@@ -91,8 +93,8 @@ class ObjectData: public ObjectMap
 public:
     ObjectData();
 
-    void insert(QString val, AttributeName attrName);
-    void insert(QString val, QString attr);
+    void insert(AttributeName attrName, AttributeType attrType, QString val);
+    void insert(QString attr, QString type, QString val);
     QVariant value(AttributeName attrName) const;
 };
 

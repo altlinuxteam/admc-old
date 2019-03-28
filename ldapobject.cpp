@@ -7,7 +7,7 @@ LdapObject::LdapObject(QString name, Connector &connector, LdapObject *parent, O
     connector(connector), parentObject(parent), objectType(objectType), isFetched(false)
 {
     qDebug() << "LdapObject::LdapObject: for" << name;
-    objectData.insert(name, NameAttr);
+    objectData.insert(NameAttr, StringUnicodeType, name);
 }
 
 LdapObject::~LdapObject()
@@ -20,9 +20,9 @@ void LdapObject::appendChild(LdapObject *object)
     childObjects.append(object);
 }
 
-void LdapObject::appendAttribute(QString name, QString value)
+void LdapObject::appendAttribute(QString name, QString type, QString value)
 {
-    objectData.insert(value, name);
+    objectData.insert(name, type, value);
 }
 
 LdapObject *LdapObject::child(int row)
