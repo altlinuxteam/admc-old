@@ -7,6 +7,13 @@ LdapObjectModel::LdapObjectModel(QObject *parent)
 
 }
 
+LdapObjectModel::~LdapObjectModel()
+{
+    qDebug() << "LdapObjectModel::~LdapObjectModel";
+    qDeleteAll(connections.begin(), connections.end());
+    connections.clear();
+}
+
 QVariant LdapObjectModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     return QVariant();

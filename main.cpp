@@ -7,9 +7,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc,argv);
 
-    QWidget *widget = new MainWindow;
+    MainWindow mainWindow;
 
-    widget->show();
+    mainWindow.show();
 
     return app.exec();
 }

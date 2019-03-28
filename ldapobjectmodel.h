@@ -26,6 +26,7 @@ public:
 
 public:
     explicit LdapObjectModel(QObject *parent = nullptr);
+    ~LdapObjectModel();
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = ObjectNameRole) const override;

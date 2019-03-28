@@ -10,17 +10,24 @@ class LdapObject;
 class LdapConnection;
 typedef QList<LdapObject*> LdapObjectList;
 
+#include <QTemporaryDir>
+
 class Connector : public QObject
 {
     Q_OBJECT
 public:
     explicit Connector(QObject *parent = nullptr);
+    ~Connector();
 
     bool connect(QString server);
     bool connect(QDir mountpoint);
+    void disconnect();
+
+    bool lastErrorExists();
+    QString lastError();
 
     void query(ObjectData &data, LdapObject *parent);
-    void childs(LdapObjectList &objectList, LdapObject *parent);
+    bool childs(LdapObjectList &objectList, LdapObject *parent);
     void queryRoot(ObjectData &data, LdapObjectList &objectList, LdapConnection *parent);
 
     QString server() const {
@@ -38,8 +45,8 @@ private:
     QString dc;
     QDir root;
     QProcess adfs;
-    bool isMounted;
     bool isUpdated;
+    QScopedPointer<QTemporaryDir> temp;
 };
 
 #endif // CONNECTOR_H

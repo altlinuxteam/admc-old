@@ -29,10 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
     hierarchy->setModel(model);
     hierarchy->setHeaderHidden(true);
 
-    connectors.append(new Connector(this));
-    Connector *c = connectors.back();
-    c->connect("dc0.domain.alt");
-    model->addConnector(*c);
+    Connector *c = new Connector(this);
+    if(c->connect("dc0.domain.alt")){
+        connectors.append(c);
+        model->addConnector(*c);
+    } else {
+        delete c;
+    }
 
     table = new LdapTableModel(this);
     objects->setShowGrid(false);
@@ -50,6 +53,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QObject::connect(hierarchy, &QTreeView::pressed, this, &MainWindow::chooseObject);
     QObject::connect(objects, &QTreeView::pressed, this, &MainWindow::chooseProperty);
+}
+
+MainWindow::~MainWindow()
+{
+    qDebug() << "MainWindow::~MainWindow";
+    delete model;
 }
 
 void MainWindow::createMenu()

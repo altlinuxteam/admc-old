@@ -15,6 +15,7 @@ class MainWindow : public QMainWindow, public Ui_MainWindow
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
     
 signals:
     

@@ -113,5 +113,5 @@ void LdapObject::queryData()
 {
     connector.query(objectData, this);
     connector.childs(childObjects, this);
-    isFetched = true;
+    isFetched = !connector.childs(childObjects, this);
 }
