@@ -154,8 +154,8 @@ bool Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         QFileInfo info(child);
         QFileInfo attributesInfo(child, ".attributes.json");
         if(info.isDir()) {
-            if (attributesInfo.isFile() && attributesInfo.isReadable()) {
-                qDebug() << "Connector::child attribute file not exists or not readable: " << attributesInfo.filePath();
+            if (!attributesInfo.isFile() || !attributesInfo.isReadable()) {
+                qDebug() << "Connector::child attribute file not exists or not readable: " << attributesInfo.filePath() << attributesInfo.isFile() << attributesInfo.isReadable();
                 continue;
             }
             LdapObject *object = new LdapObject(info.fileName(), *this, parent);
