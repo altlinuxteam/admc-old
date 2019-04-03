@@ -4,9 +4,9 @@
 #include <QStringList>
 
 LdapObject::LdapObject(QString name, Connector &connector, LdapObject *parent, ObjectType objectType):
-    connector(connector), parentObject(parent), objectType(objectType), isFetched(false)
+    connector(connector), parentObject(parent), objectType(objectType), isFetched(false), adfsFileName(name)
 {
-    qDebug() << "LdapObject::LdapObject: for" << name;
+    qDebug() << "LdapObject::LdapObject: for adfsFileName" << name;
     objectData.insert(NameAttr, StringUnicodeType, name);
 }
 
@@ -50,12 +50,17 @@ QString LdapObject::name() const
     return objectData.value(NameAttr).toString();
 }
 
+QString LdapObject::dn() const
+{
+    return objectData.value(DNAttr).toString();
+}
+
 QString LdapObject::path(QString child) const
 {
     if (type() == ConnectionType)
         return QString(QDir::separator());
 
-    QString path = name();
+    QString path = adfsFileName;
     if (!child.isNull())
         path += QDir::separator() + child;
 

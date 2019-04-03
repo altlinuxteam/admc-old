@@ -27,6 +27,7 @@ public:
     int columnCount() const;
     QVariant data(AttributeName attr) const;
     QString name() const;
+    QString dn() const;
     QString path(QString parent = QString()) const;
     int row() const;
     LdapObject *parent() const;
@@ -46,6 +47,7 @@ protected:
 
 private:
     ObjectType objectType;
+    QString adfsFileName;
 
     void queryData();
     bool isFetched;

@@ -41,6 +41,10 @@ signals:
 
 public slots:
 
+protected slots:
+    void 	readStandardError();
+    void 	readStandardOutput();
+
 private:
     QString dc;
     QDir root;

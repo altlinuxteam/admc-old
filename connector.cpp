@@ -52,6 +52,13 @@ bool Connector::connect(QString server)
     qDebug() << "Connector::connect: mount path: " << mountRoot;
     if (!mountRoot.exists())
         mountRoot.mkpath(mountRoot.path());
+
+    adfs.setStandardOutputFile(QProcess::nullDevice());
+    adfs.setStandardErrorFile(QProcess::nullDevice());
+//    QObject::connect(&adfs, &QProcess::readyReadStandardError, this, &Connector::readStandardError);
+//    QObject::connect(&adfs, &QProcess::readyReadStandardOutput, this, &Connector::readStandardOutput);
+//    adfs.setProcessChannelMode(QProcess::ForwardedErrorChannel);
+//    adfs.setReadChannel(QProcess::StandardOutput);
     adfs.start("hadfs", QStringList() << mountRoot.path() << server);
     if (!adfs.waitForStarted(3000)) {
         qDebug() << "Connector::connect: adfs not started: " << adfs.errorString();
@@ -64,6 +71,16 @@ bool Connector::connect(QString server)
 
     return connect(mountRoot);
     //return connect(QDir("/home/sin/work/samba/ui/admc/mnt"));
+}
+
+void Connector::readStandardError()
+{
+    qDebug() << "ADFS stderror: " << adfs.readAllStandardError();
+}
+
+void Connector::readStandardOutput()
+{
+    qDebug() << "ADFS stdout: " << adfs.readAllStandardOutput();
 }
 
 bool Connector::lastErrorExists()
@@ -153,18 +170,24 @@ bool Connector::childs(LdapObjectList &objectList, LdapObject *parent)
         qDebug() << "Connector::childs: " << child;
         QFileInfo info(child);
         QFileInfo attributesInfo(child, ".attributes.json");
+        //QFileInfo attributesInfoOld(child.replace("/mnt","/.cache-domain.alt"), ".attributes.json");
         if(info.isDir()) {
+            //if (attributesInfoOld.exists())
+            //    attributesInfo = attributesInfoOld;
             if (!attributesInfo.isFile() || !attributesInfo.isReadable()) {
                 qDebug() << "Connector::child attribute file not exists or not readable: " << attributesInfo.filePath() << attributesInfo.isFile() << attributesInfo.isReadable();
                 continue;
             }
             LdapObject *object = new LdapObject(info.fileName(), *this, parent);
             QFile attributesFile(attributesInfo.filePath());
+            qDebug() << "Connector::childs0: " << attributesInfo.filePath();
             if (attributesFile.open(QIODevice::ReadOnly))
             {
                 QByteArray attributesData = attributesFile.readAll();
+                qDebug() << "Connector::childs1: " << attributesInfo.filePath();
                 QJsonDocument attributesDocument(QJsonDocument::fromJson(attributesData));
 
+                qDebug() << "Connector::childs2: " << attributesInfo.filePath();
                 QJsonObject jsonObject = attributesDocument.object();
                 if (jsonObject.contains("trDN") && jsonObject["trDN"].isString()) {
                     QString dn = jsonObject["trDN"].toString();
@@ -228,14 +251,15 @@ QStringList Connector::search(QString server)
     if (mtabFile.open(QIODevice::ReadOnly))
     {
         QTextStream in(&mtabFile);
-        QRegularExpression mtabPattern("^(adfs|hadfs) (.*) type fuse.(\\S*) ");
+        QRegularExpression mtabPattern("^(adfs|hadfs) (.*) fuse.(\\S*) ");
         qDebug() << "mtab opened: " << mtabFile.fileName();
         QString line = in.readLine();
         while (!line.isEmpty()) {
             QRegularExpressionMatch res = mtabPattern.match(line);
             //qDebug() << "mtab line: " << line;
             if (res.hasMatch()) {
-                if (server.isNull() || server == res.capturedTexts().at(3))
+                qDebug() << "mtab match: " << server << res.capturedTexts().at(2);
+                if (server == res.capturedTexts().at(3))
                     mounts << res.capturedTexts().at(2);
                 qDebug() << "mtab: " << res.capturedTexts();
                 qDebug() << "mtab mounts: " << mounts << " for " << res.capturedTexts().at(3) << "(" << server << ")";
